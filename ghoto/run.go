@@ -125,7 +125,12 @@ func (g *Ghoto) work(
 	for i, photo_file := range util.Filter_photo_files(files) {
 		google_photo, err := g.google_photos.Upload_photo(photo_file, *google_album)
 		if err != nil {
-			fmt.Printf("work__Upload_photo: %v\n", err.Error())
+			fmt.Printf("❌ Photo upload failed: #%v-%v, file=%v\n",
+				worker_id+1,
+				i+1,
+				photo_file,
+			)
+			continue
 		}
 
 		google_photo__get, get_photo_err := g.google_photos.Get_photo(google_photo.Id)
