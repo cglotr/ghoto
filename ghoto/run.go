@@ -65,7 +65,7 @@ func (g *Ghoto) Run(dir string, album_name string) error {
 	if google_album == nil {
 		google_album, err = g.google_photos.Create_album(album_name)
 		if err != nil {
-			fmt.Printf("work__Create_album: %v\n", err.Error())
+			panic("Failed to create Google Photos album: " + err.Error())
 		}
 	}
 
