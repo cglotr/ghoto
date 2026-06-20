@@ -114,7 +114,7 @@ func (g *Ghoto) work(
 
 	res__list_album, err := g.google_photos.List_album()
 	if err != nil {
-		fmt.Printf("work__List_album: %v\n", err.Error())
+		panic("Failed to get album list: " + err.Error())
 	}
 
 	for _, album := range res__list_album.Albums {
