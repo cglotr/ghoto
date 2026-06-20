@@ -51,16 +51,8 @@ func (g *Ghoto) Run(dir string, album string) error {
 
 	files := util.Filter_photo_files(util.Get_files(dir))
 
-	if len(files) < 1 {
-		fmt.Printf("✅ No file to process, exiting.\n")
-		return nil
-	}
-
-	worker_count := min(10, len(files))
+	worker_count := max(1, min(10, len(files)))
 	files_per_worker := (len(files) / worker_count) + 1
-	if files_per_worker <= 0 {
-		files_per_worker = len(files)
-	}
 
 	work_assigned_count := 0
 	wg := &sync.WaitGroup{}
@@ -89,12 +81,12 @@ func (g *Ghoto) Run(dir string, album string) error {
 
 	wg.Wait()
 
-	files = util.Get_files(dir)
-	if len(files) > 0 {
-		return errors.New("Run__Get_files__files_remaining")
+	photo_files := util.Filter_photo_files(util.Get_files(dir))
+	if len(photo_files) > 0 {
+		return errors.New("Photo files remaining!")
 	}
 
-	non_photo_files := util.Filter_non_photo_files(files)
+	non_photo_files := util.Filter_non_photo_files(util.Get_files(dir))
 	for _, non_photo_file := range non_photo_files {
 		os.Remove(non_photo_file)
 	}
