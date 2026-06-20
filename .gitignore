@@ -1,6 +1,7 @@
 vendor
 
 .DS_Store
+.vscode
 credentials.json
 coverage.txt
 token.json

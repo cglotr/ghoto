@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ghoto</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --border: #30363d;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --green: #3fb950;
+      --red: #f85149;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    header .logo { font-size: 1.75rem; }
+
+    header h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+
+    header .badges {
+      margin-left: auto;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 4rem 2rem 3rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero .icon { font-size: 4rem; margin-bottom: 1rem; }
+
+    .hero h2 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      letter-spacing: -1px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 1.15rem;
+      max-width: 520px;
+      margin: 0 auto 2rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.6rem 1.4rem;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: opacity 0.15s;
+    }
+
+    .btn:hover { opacity: 0.8; }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0d1117;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      margin-left: 0.5rem;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    section { margin-bottom: 3.5rem; }
+
+    section h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 0.8rem;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+    }
+
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+    }
+
+    .feature-card .icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .feature-card h4 { font-size: 1rem; font-weight: 600; margin-bottom: 0.35rem; }
+    .feature-card p { color: var(--muted); font-size: 0.9rem; }
+
+    pre {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; }
+
+    .flag { color: var(--accent); }
+    .comment { color: var(--muted); }
+    .value { color: var(--green); }
+
+    .steps { counter-reset: step; }
+
+    .step {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      counter-increment: step;
+      background: var(--accent);
+      color: #0d1117;
+      border-radius: 50%;
+      width: 1.75rem;
+      height: 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+      margin-top: 0.15rem;
+    }
+
+    .step-body h4 { font-weight: 600; margin-bottom: 0.25rem; }
+    .step-body p { color: var(--muted); font-size: 0.9rem; }
+
+    .supported {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tag {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.2rem 0.65rem;
+      font-size: 0.85rem;
+      font-family: monospace;
+      color: var(--green);
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: 0.875rem;
+    }
+
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 600px) {
+      .hero h2 { font-size: 1.75rem; }
+      header { flex-wrap: wrap; }
+      header .badges { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <span class="logo">📷</span>
+  <h1>Ghoto</h1>
+  <div class="badges">
+    <a href="https://codecov.io/gh/cglotr/ghoto">
+      <img src="https://codecov.io/gh/cglotr/ghoto/graph/badge.svg?token=htlQz2dPW3" alt="codecov" />
+    </a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="icon">🚀</div>
+  <h2>Upload photos to Google Photos — fast.</h2>
+  <p>Ghoto is a CLI tool that uploads photos and videos from a local directory to a Google Photos album, then removes local copies after a successful upload.</p>
+  <a href="https://github.com/cglotr/ghoto" class="btn btn-primary">View on GitHub</a>
+  <a href="https://github.com/cglotr/ghoto/releases" class="btn btn-secondary">Releases</a>
+</div>
+
+<main>
+
+  <section>
+    <h3>Features</h3>
+    <div class="features">
+      <div class="feature-card">
+        <div class="icon">⚡</div>
+        <h4>Concurrent uploads</h4>
+        <p>Splits files across up to 10 parallel workers for fast batch uploads.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🔁</div>
+        <h4>Auto retry</h4>
+        <p>Retries failed uploads up to 10 times with incremental back-off.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🗂️</div>
+        <h4>Album management</h4>
+        <p>Finds or creates the target album automatically before uploading.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🧹</div>
+        <h4>Auto cleanup</h4>
+        <p>Deletes local files only after confirming a successful upload.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🔍</div>
+        <h4>Dry run mode</h4>
+        <p>Preview what would be uploaded without making any changes.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🔐</div>
+        <h4>OAuth 2.0</h4>
+        <p>Authenticates securely with Google via standard OAuth 2.0 flow.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h3>Supported file types</h3>
+    <div class="supported">
+      <span class="tag">.jpg</span>
+      <span class="tag">.mp4</span>
+    </div>
+    <p style="color:var(--muted);font-size:0.875rem;margin-top:0.75rem;">
+      Files starting with <code>.</code> are automatically skipped. <code>.dng</code> and <code>.lrv</code> sidecar files are cleaned up after the main upload.
+    </p>
+  </section>
+
+  <section>
+    <h3>Getting started</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Clone &amp; build</h4>
+          <pre><code>git clone https://github.com/cglotr/ghoto.git
+cd ghoto
+go build -o ghoto .</code></pre>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Add Google credentials</h4>
+          <p>Place your Google OAuth 2.0 <code>credentials.json</code> in the project root. The first run will open a browser to complete authentication.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Run</h4>
+          <pre><code><span class="comment"># Upload photos from ~/Pictures/Insta360 to the "Insta360" album</span>
+./ghoto <span class="flag">-dir</span> <span class="value">~/Pictures/Insta360</span> <span class="flag">-album</span> <span class="value">Insta360</span>
+
+<span class="comment"># Dry run — no uploads, no deletions</span>
+./ghoto <span class="flag">-dir</span> <span class="value">~/Pictures/Insta360</span> <span class="flag">-dryrun</span></code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h3>CLI flags</h3>
+    <pre><code><span class="flag">-album</span>   <span class="value">string</span>   Album name to upload to  <span class="comment">(default "Insta360")</span>
+<span class="flag">-dir</span>     <span class="value">string</span>   Photo directory to upload
+<span class="flag">-dryrun</span>  <span class="value">bool</span>     Non-mutative dry run mode</code></pre>
+  </section>
+
+</main>
+
+<footer>
+  <p>Built with Go &nbsp;·&nbsp; <a href="https://github.com/cglotr/ghoto">github.com/cglotr/ghoto</a></p>
+</footer>
+
+</body>
+</html>
