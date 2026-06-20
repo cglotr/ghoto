@@ -41,13 +41,33 @@ func (g *Ghoto) Activate() {
 	g.file_remover = fileremover.File_remover__impl__new()
 }
 
-func (g *Ghoto) Run(dir string, album string) error {
+func (g *Ghoto) Run(dir string, album_name string) error {
 	dir = filepath.Dir(dir)
 	fmt.Printf("🌿 Ghoto %v: dir=%v, album=%v\n",
 		ghoto_version,
 		dir,
-		album,
+		album_name,
 	)
+
+	var google_album *googlephotos.Google_album
+	res__list_album, err := g.google_photos.List_album()
+	if err != nil {
+		panic("Failed to get album list: " + err.Error())
+	}
+	for _, album := range res__list_album.Albums {
+		if album.Title == album_name {
+			google_album = &googlephotos.Google_album{
+				Id:   album.Id,
+				Name: album.Title,
+			}
+		}
+	}
+	if google_album == nil {
+		google_album, err = g.google_photos.Create_album(album_name)
+		if err != nil {
+			fmt.Printf("work__Create_album: %v\n", err.Error())
+		}
+	}
 
 	files := util.Filter_photo_files(util.Get_files(dir))
 
@@ -70,7 +90,7 @@ func (g *Ghoto) Run(dir string, album string) error {
 			worker_id,
 			wg,
 			files_for_worker,
-			album,
+			google_album,
 		)
 
 		work_assigned_count += j - i
@@ -98,32 +118,9 @@ func (g *Ghoto) work(
 	worker_id int,
 	wg *sync.WaitGroup,
 	files []string,
-	album_name string,
+	google_album *googlephotos.Google_album,
 ) {
 	defer wg.Done()
-
-	var google_album *googlephotos.Google_album
-
-	res__list_album, err := g.google_photos.List_album()
-	if err != nil {
-		panic("Failed to get album list: " + err.Error())
-	}
-
-	for _, album := range res__list_album.Albums {
-		if album.Title == album_name {
-			google_album = &googlephotos.Google_album{
-				Id:   album.Id,
-				Name: album.Title,
-			}
-		}
-	}
-
-	if google_album == nil {
-		google_album, err = g.google_photos.Create_album(album_name)
-		if err != nil {
-			fmt.Printf("work__Create_album: %v\n", err.Error())
-		}
-	}
 
 	for i, photo_file := range util.Filter_photo_files(files) {
 		google_photo, err := g.google_photos.Upload_photo(photo_file, *google_album)
