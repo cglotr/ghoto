@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy – Ghoto</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --border: #30363d;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      line-height: 1.7;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    header .logo { font-size: 1.75rem; }
+    header h1 { font-size: 1.5rem; font-weight: 600; }
+    header a { margin-left: auto; color: var(--accent); text-decoration: none; font-size: 0.9rem; }
+    header a:hover { text-decoration: underline; }
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+    h2 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .updated { color: var(--muted); font-size: 0.875rem; margin-bottom: 2.5rem; }
+    section { margin-bottom: 2rem; }
+    section h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 0.8rem;
+      margin-bottom: 0.75rem;
+    }
+    section p { color: var(--muted); font-size: 0.95rem; }
+    section ul {
+      color: var(--muted);
+      font-size: 0.95rem;
+      padding-left: 1.5rem;
+      margin-top: 0.5rem;
+    }
+    section ul li { margin-bottom: 0.35rem; }
+    footer {
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: 0.875rem;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<header>
+  <span class="logo">📷</span>
+  <h1>Ghoto</h1>
+  <a href="index.html">← Back to home</a>
+</header>
+
+<main>
+  <h2>Privacy Policy</h2>
+  <p class="updated">Last updated: June 20, 2026</p>
+
+  <section>
+    <h3>Overview</h3>
+    <p>Ghoto is a command-line tool that uploads photos and videos from a local directory to Google Photos. This policy explains what data is accessed and how it is used.</p>
+  </section>
+
+  <section>
+    <h3>Data we access</h3>
+    <p>Ghoto requests access to your Google Photos library solely to perform the following actions:</p>
+    <ul>
+      <li>List existing albums in your Google Photos account</li>
+      <li>Create a new album if the specified album does not exist</li>
+      <li>Upload photos and videos from your local directory to the specified album</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>Data we do not collect</h3>
+    <p>Ghoto does not collect, store, transmit, or share any personal information. All processing happens locally on your machine. No data is sent to any third-party server other than Google Photos via Google's official API.</p>
+  </section>
+
+  <section>
+    <h3>OAuth credentials</h3>
+    <p>Ghoto uses Google OAuth 2.0 for authentication. Your access token is stored locally in a token file on your machine and is never transmitted anywhere other than to Google's authentication servers. You can revoke access at any time via your <a href="https://myaccount.google.com/permissions" style="color:var(--accent)">Google Account permissions</a>.</p>
+  </section>
+
+  <section>
+    <h3>Local file deletion</h3>
+    <p>After a successful upload, Ghoto may delete local copies of uploaded files. This operation runs entirely on your local machine and is not related to any data collection.</p>
+  </section>
+
+  <section>
+    <h3>Contact</h3>
+    <p>This is a school project. For questions, visit the project repository at <a href="https://github.com/cglotr/ghoto" style="color:var(--accent)">github.com/cglotr/ghoto</a>.</p>
+  </section>
+</main>
+
+<footer>
+  <p>Built with Go &nbsp;·&nbsp; <a href="https://github.com/cglotr/ghoto">github.com/cglotr/ghoto</a></p>
+</footer>
+
+</body>
+</html>

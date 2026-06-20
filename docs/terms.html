@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms of Service – Ghoto</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --border: #30363d;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      line-height: 1.7;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    header .logo { font-size: 1.75rem; }
+    header h1 { font-size: 1.5rem; font-weight: 600; }
+    header a { margin-left: auto; color: var(--accent); text-decoration: none; font-size: 0.9rem; }
+    header a:hover { text-decoration: underline; }
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+    h2 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .updated { color: var(--muted); font-size: 0.875rem; margin-bottom: 2.5rem; }
+    section { margin-bottom: 2rem; }
+    section h3 {
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 0.8rem;
+      margin-bottom: 0.75rem;
+    }
+    section p { color: var(--muted); font-size: 0.95rem; }
+    section ul {
+      color: var(--muted);
+      font-size: 0.95rem;
+      padding-left: 1.5rem;
+      margin-top: 0.5rem;
+    }
+    section ul li { margin-bottom: 0.35rem; }
+    footer {
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: 0.875rem;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<header>
+  <span class="logo">📷</span>
+  <h1>Ghoto</h1>
+  <a href="index.html">← Back to home</a>
+</header>
+
+<main>
+  <h2>Terms of Service</h2>
+  <p class="updated">Last updated: June 20, 2026</p>
+
+  <section>
+    <h3>Overview</h3>
+    <p>Ghoto is a free, open-source command-line tool developed as a school project. By using Ghoto, you agree to these terms.</p>
+  </section>
+
+  <section>
+    <h3>Use of the tool</h3>
+    <p>Ghoto is provided for personal use to upload photos and videos to your own Google Photos account. You agree to:</p>
+    <ul>
+      <li>Use Ghoto only with your own Google account and files you own or have rights to</li>
+      <li>Comply with <a href="https://policies.google.com/terms" style="color:var(--accent)">Google's Terms of Service</a> and the Google Photos API terms when using this tool</li>
+      <li>Not use Ghoto for any unlawful purpose</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>No warranty</h3>
+    <p>Ghoto is provided "as is" without any warranty of any kind. The authors make no guarantees about reliability, accuracy, or fitness for a particular purpose. Use at your own risk.</p>
+  </section>
+
+  <section>
+    <h3>Limitation of liability</h3>
+    <p>The authors of Ghoto are not liable for any loss of data, accidental file deletion, or damages arising from the use of this tool. Always keep backups of important files.</p>
+  </section>
+
+  <section>
+    <h3>Changes to these terms</h3>
+    <p>These terms may be updated at any time. Continued use of Ghoto after changes constitutes acceptance of the new terms.</p>
+  </section>
+
+  <section>
+    <h3>Contact</h3>
+    <p>This is a school project. For questions, visit the project repository at <a href="https://github.com/cglotr/ghoto" style="color:var(--accent)">github.com/cglotr/ghoto</a>.</p>
+  </section>
+</main>
+
+<footer>
+  <p>Built with Go &nbsp;·&nbsp; <a href="https://github.com/cglotr/ghoto">github.com/cglotr/ghoto</a></p>
+</footer>
+
+</body>
+</html>
