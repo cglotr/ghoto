@@ -73,6 +73,25 @@ func (g *Ghoto) Run(dir string, album_name string) error {
 
 	files := util.Filter_photo_files(util.Get_files(dir))
 
+	err = g.run(files, album_name)
+	if err != nil {
+		return err
+	}
+
+	photo_files := util.Filter_photo_files(util.Get_files(dir))
+	if len(photo_files) > 0 {
+		return errors.New("Photo files remaining!")
+	}
+
+	non_photo_files := util.Filter_non_photo_files(util.Get_files(dir))
+	for _, non_photo_file := range non_photo_files {
+		os.Remove(non_photo_file)
+	}
+
+	return nil
+}
+
+func (g *Ghoto) run(files []string, album_name string) error {
 	worker_count := max(1, min(10, len(files)))
 	files_per_worker := (len(files) / worker_count) + 1
 
@@ -121,16 +140,6 @@ func (g *Ghoto) Run(dir string, album_name string) error {
 	})
 	for _, photo_upload := range photo_uploads {
 		fmt.Printf("(%v, %v)\n", photo_upload.Order, photo_upload.File_path)
-	}
-
-	photo_files := util.Filter_photo_files(util.Get_files(dir))
-	if len(photo_files) > 0 {
-		return errors.New("Photo files remaining!")
-	}
-
-	non_photo_files := util.Filter_non_photo_files(util.Get_files(dir))
-	for _, non_photo_file := range non_photo_files {
-		os.Remove(non_photo_file)
 	}
 
 	return nil

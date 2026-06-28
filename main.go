@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"time"
 
 	p__ghoto "github.com/cglotr/ghoto/ghoto"
 	"github.com/cglotr/ghoto/util"
@@ -21,18 +20,8 @@ func main() {
 	}
 
 	err := ghoto.Run(*f__dir, *f__album)
-
-	retry_count := 0
-	for err != nil && retry_count < 10 {
-		retry_count += 1
-		retry_second := retry_count * 10
-
-		fmt.Printf("🔁 Retrying: retry=%v, wait=%vs\n", retry_count, retry_second)
-		if !*f__dryrun {
-			time.Sleep(time.Duration(retry_second) * time.Second)
-		}
-
-		err = ghoto.Run(*f__dir, *f__album)
+	if err != nil {
+		fmt.Printf("❌ Failed to finish the run: dir=%v, album=%v\n", *f__dir, *f__album)
 	}
 
 	files := util.Filter_photo_files(util.Get_files(*f__dir))
