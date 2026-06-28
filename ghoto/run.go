@@ -144,7 +144,7 @@ func (g *Ghoto) upload_photo_files(photo_files []string, google_album googlephot
 		google_photo, err := g.google_photos.Create_photo(
 			photo_upload.Upload_token,
 			google_album,
-			photo_upload.File_path,
+			photo_upload.Get_file_name(),
 		)
 		if err == nil && google_photo.ProductUrl != "" {
 			check__photo_create = true
