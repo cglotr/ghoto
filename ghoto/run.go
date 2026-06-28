@@ -82,7 +82,7 @@ func (g *Ghoto) Run(dir string, album_name string) error {
 		)
 		batch_photo_files := sorted_photo_files[batch_cursor:batch_end]
 
-		err = g.run(batch_photo_files, album_name)
+		err = g.upload_photo_files(batch_photo_files, album_name)
 		if err != nil {
 			return err
 		}
@@ -103,7 +103,7 @@ func (g *Ghoto) Run(dir string, album_name string) error {
 	return nil
 }
 
-func (g *Ghoto) run(files []string, album_name string) error {
+func (g *Ghoto) upload_photo_files(files []string, album_name string) error {
 	worker_count := max(1, min(10, len(files)))
 	files_per_worker := (len(files) / worker_count) + 1
 
