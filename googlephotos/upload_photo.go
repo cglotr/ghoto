@@ -5,21 +5,31 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
+	"net/http"
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/cglotr/ghoto/constant"
 )
 
-func (g *Google_photos__impl) Create_photo(upload_token string, google_album Google_album) (*Google_photo, error) {
+func (g *Google_photos__impl) Create_photo(
+	upload_token string,
+	google_album Google_album,
+	file_name string,
+) (*Google_photo, error) {
 	try_count := 0
-	res__mediaItem, err := g.create_photo(upload_token, google_album)
-	for err != nil && try_count < 3 {
-		try_count += 1
-
-		time.Sleep(time.Duration(try_count) * 10 * time.Second)
-
-		res__mediaItem, err = g.create_photo(upload_token, google_album)
+	func__post := func() (*Res__mediaItem, error) {
+		return g.create_photo(upload_token, google_album, file_name)
 	}
+
+	res__mediaItem, err := func__post()
+	for err != nil && try_count < constant.Retry__count {
+		try_count += 1
+		time.Sleep(time.Duration(try_count) * 10 * time.Second)
+		res__mediaItem, err = func__post()
+	}
+
 	if err != nil {
 		return nil, errors.New("Upload_photo__create_photo__err: " + err.Error())
 	}
@@ -41,9 +51,16 @@ func (g *Google_photos__impl) Upload_photo(file_path string) (*string, error) {
 		return nil, err
 	}
 
-	res, err := g.client.Post(url, contentType, bytes.NewBuffer(b))
-	if err != nil {
-		return nil, err
+	try_count := 0
+	func__post := func() (*http.Response, error) {
+		return g.client.Post(url, contentType, bytes.NewBuffer(b))
+	}
+
+	res, err := func__post()
+	for err != nil && try_count < constant.Retry__count {
+		try_count += 1
+		time.Sleep(time.Duration(try_count) * 10 * time.Second)
+		res, err = func__post()
 	}
 
 	b, err = io.ReadAll(res.Body)
@@ -55,9 +72,14 @@ func (g *Google_photos__impl) Upload_photo(file_path string) (*string, error) {
 	return &upload_token, nil
 }
 
-func (g *Google_photos__impl) create_photo(upload_token string, google_album Google_album) (*Res__mediaItem, error) {
+func (g *Google_photos__impl) create_photo(
+	upload_token string,
+	google_album Google_album,
+	file_name string,
+) (*Res__mediaItem, error) {
 	type Req__simpleMediaItem struct {
 		UploadToken string `json:"uploadToken"`
+		FileName    string `json:"fileName"`
 	}
 	type Req__newMediaItems struct {
 		SimpleMediaItem Req__simpleMediaItem `json:"simpleMediaItem"`
@@ -77,6 +99,7 @@ func (g *Google_photos__impl) create_photo(upload_token string, google_album Goo
 			{
 				SimpleMediaItem: Req__simpleMediaItem{
 					UploadToken: upload_token,
+					FileName:    file_name,
 				},
 			},
 		},
