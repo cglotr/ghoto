@@ -32,7 +32,7 @@ func (g *Google_photos__dummy) List_album() (*Res__list_album, error) {
 }
 
 func (g *Google_photos__dummy) Upload_photo(file_path string) (*string, error) {
-	upload_token := "upload_token"
+	upload_token := "upload_token__" + file_path
 	return &upload_token, nil
 }
 

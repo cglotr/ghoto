@@ -82,7 +82,7 @@ func (g *Ghoto) Run(dir string, album_name string) error {
 		)
 		batch_photo_files := sorted_photo_files[batch_cursor:batch_end]
 
-		err = g.upload_photo_files(batch_photo_files, album_name)
+		err = g.upload_photo_files(batch_photo_files, *google_album)
 		if err != nil {
 			return err
 		}
@@ -103,55 +103,64 @@ func (g *Ghoto) Run(dir string, album_name string) error {
 	return nil
 }
 
-func (g *Ghoto) upload_photo_files(files []string, album_name string) error {
-	worker_count := max(1, min(10, len(files)))
-	files_per_worker := (len(files) / worker_count) + 1
-
-	work_assigned_count := 0
+func (g *Ghoto) upload_photo_files(photo_files []string, google_album googlephotos.Google_album) error {
 	wg := &sync.WaitGroup{}
-	ch__photo_upload := make(chan Photo_upload, len(files))
-	photo_order := 0
+	ch__photo_upload := make(chan Photo_upload, len(photo_files))
 
-	for worker_id := range worker_count {
-		i := files_per_worker * worker_id
-		if i >= len(files) {
-			continue
-		}
-		j := min(i+files_per_worker, len(files))
-		files_for_worker := []File_for_worker{}
-		for _, file := range files[i:j] {
-			file_for_worker := File_for_worker{
-				Order:     photo_order,
-				File_path: file,
-			}
-			photo_order += 1
-			files_for_worker = append(files_for_worker, file_for_worker)
+	for order, photo_file := range photo_files {
+		file_for_worker := File_for_worker{
+			Order:     order,
+			File_path: photo_file,
 		}
 
 		wg.Add(1)
 		go g.work__upload_photo(
 			wg,
-			files_for_worker,
+			file_for_worker,
 			ch__photo_upload,
 		)
-
-		work_assigned_count += j - i
-		if work_assigned_count >= len(files) {
-			break
-		}
 	}
 
 	wg.Wait()
 
 	photo_uploads := []Photo_upload{}
-	for range files {
+	for range photo_files {
 		photo_uploads = append(photo_uploads, <-ch__photo_upload)
 	}
 	slices.SortFunc(photo_uploads, func(a, b Photo_upload) int {
 		return cmp.Compare(a.Order, b.Order)
 	})
 	for _, photo_upload := range photo_uploads {
-		fmt.Printf("(%v, %v)\n", photo_upload.Order, photo_upload.File_path)
+		check__photo_upload := false
+		check__photo_create := false
+		check__photo_cleanup := false
+
+		if photo_upload.Upload_token != "" {
+			check__photo_upload = true
+		}
+
+		google_photo, err := g.google_photos.Create_photo(photo_upload.Upload_token, google_album)
+		if err == nil && google_photo.ProductUrl != "" {
+			check__photo_create = true
+		}
+
+		if check__photo_upload && check__photo_create {
+			err = g.file_remover.Remove(photo_upload.File_path)
+			if err == nil {
+				check__photo_cleanup = true
+			}
+		}
+
+		if check__photo_upload && check__photo_create && check__photo_cleanup {
+			fmt.Printf("✅ Photo upload done: file=%v, url=%v\n",
+				google_photo.Filename,
+				google_photo.ProductUrl,
+			)
+		} else {
+			fmt.Printf("❌ Photo upload failed: file=%v\n",
+				google_photo.Filename,
+			)
+		}
 	}
 
 	return nil
@@ -159,58 +168,21 @@ func (g *Ghoto) upload_photo_files(files []string, album_name string) error {
 
 func (g *Ghoto) work__upload_photo(
 	wg *sync.WaitGroup,
-	files_for_worker []File_for_worker,
+	file_for_worker File_for_worker,
 	ch__photo_upload chan Photo_upload,
 ) {
 	defer wg.Done()
 
-	for _, file_for_worker := range files_for_worker {
-		upload_token, err := g.google_photos.Upload_photo(file_for_worker.File_path)
-		if err != nil {
-			fmt.Printf("❌ Photo upload failed: file=%v\n",
-				file_for_worker,
-			)
-			continue
-		}
-		ch__photo_upload <- Photo_upload{
-			Order:        file_for_worker.Order,
-			File_path:    file_for_worker.File_path,
-			Upload_token: *upload_token,
-		}
+	upload_token, err := g.google_photos.Upload_photo(file_for_worker.File_path)
+	if err != nil {
+		fmt.Printf("❌ Photo upload failed: file=%v\n",
+			file_for_worker,
+		)
+		return
+	}
+	ch__photo_upload <- Photo_upload{
+		Order:        file_for_worker.Order,
+		File_path:    file_for_worker.File_path,
+		Upload_token: *upload_token,
 	}
 }
-
-// func (g *Ghoto) work__create_photo(
-// 	worker_id int,
-// 	wg *sync.WaitGroup,
-// 	files []string,
-// 	google_album *googlephotos.Google_album,
-// ) {
-// 	google_photo, err := g.google_photos.Create_photo(*upload_token, *google_album)
-// 	if err != nil {
-// 		fmt.Printf("❌ Photo upload failed: #%v-%v, file=%v\n",
-// 			worker_id+1,
-// 			i+1,
-// 			photo_file,
-// 		)
-// 		continue
-// 	}
-
-// 	google_photo__get, get_photo_err := g.google_photos.Get_photo(google_photo.Id)
-// 	if get_photo_err == nil && len(google_photo__get.ProductUrl) > 0 {
-// 		g.file_remover.Remove(photo_file)
-
-// 		fmt.Printf("✅ Photo upload done: #%v-%v, file=%v, url=%v\n",
-// 			worker_id+1,
-// 			i+1,
-// 			photo_file,
-// 			google_photo__get.ProductUrl,
-// 		)
-// 	} else {
-// 		fmt.Printf("❌ Photo upload failed: #%v-%v, file=%v\n",
-// 			worker_id+1,
-// 			i+1,
-// 			photo_file,
-// 		)
-// 	}
-// }
