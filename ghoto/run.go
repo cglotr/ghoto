@@ -71,11 +71,23 @@ func (g *Ghoto) Run(dir string, album_name string) error {
 		}
 	}
 
-	files := util.Filter_photo_files(util.Get_files(dir))
+	sorted_photo_files := util.Sort_files(util.Filter_photo_files(util.Get_files(dir)))
 
-	err = g.run(files, album_name)
-	if err != nil {
-		return err
+	batch_cursor := 0
+	for batch_cursor < len(sorted_photo_files) {
+		photos_per_batch := 10
+		batch_end := min(
+			batch_cursor+photos_per_batch,
+			len(sorted_photo_files),
+		)
+		batch_photo_files := sorted_photo_files[batch_cursor:batch_end]
+
+		err = g.run(batch_photo_files, album_name)
+		if err != nil {
+			return err
+		}
+
+		batch_cursor += photos_per_batch
 	}
 
 	photo_files := util.Filter_photo_files(util.Get_files(dir))
