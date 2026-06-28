@@ -44,7 +44,7 @@ func (g *Ghoto) Activate() {
 }
 
 func (g *Ghoto) Run(dir string, album_name string) error {
-	dir = filepath.Dir(dir)
+	dir = filepath.Dir(dir + "/")
 	fmt.Printf("🌿 Ghoto %v: dir=%v, album=%v\n",
 		ghoto_version,
 		dir,
@@ -130,6 +130,8 @@ func (g *Ghoto) upload_photo_files(photo_files []string, google_album googlephot
 	slices.SortFunc(photo_uploads, func(a, b Photo_upload) int {
 		return cmp.Compare(a.Order, b.Order)
 	})
+
+	check__failure := false
 	for _, photo_upload := range photo_uploads {
 		check__photo_upload := false
 		check__photo_create := false
@@ -157,13 +159,18 @@ func (g *Ghoto) upload_photo_files(photo_files []string, google_album googlephot
 				google_photo.ProductUrl,
 			)
 		} else {
+			check__failure = true
 			fmt.Printf("❌ Photo upload failed: file=%v\n",
-				google_photo.Filename,
+				photo_upload.File_path,
 			)
 		}
 	}
 
-	return nil
+	if check__failure {
+		return errors.New("Some photos failed to upload")
+	} else {
+		return nil
+	}
 }
 
 func (g *Ghoto) work__upload_photo(
