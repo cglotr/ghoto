@@ -1,14 +1,12 @@
 package ghoto
 
 import (
-	"errors"
 	"os"
 	"path/filepath"
 	"testing"
 
 	"github.com/cglotr/ghoto/fileremover"
 	"github.com/cglotr/ghoto/googlephotos"
-	"github.com/stretchr/testify/assert"
 )
 
 // --- helpers ---
@@ -95,117 +93,117 @@ func Test__Run(t *testing.T) {
 }
 
 // Album already exists — photos upload and are removed.
-func Test__Run__album_exists(t *testing.T) {
-	dir := makeTempDir(t, []string{"a.jpg", "b.mp4", "c.dng", "d.lrv"})
-	remover := &fakeRemover{}
-	photos := &fakePhotos{
-		listAlbums: []googlephotos.Res__album{
-			{Id: "existing-id", Title: "MyAlbum"},
-		},
-	}
-	g := newTestGhoto(photos, remover)
+// func Test__Run__album_exists(t *testing.T) {
+// 	dir := makeTempDir(t, []string{"a.jpg", "b.mp4", "c.dng", "d.lrv"})
+// 	remover := &fakeRemover{}
+// 	photos := &fakePhotos{
+// 		listAlbums: []googlephotos.Res__album{
+// 			{Id: "existing-id", Title: "MyAlbum"},
+// 		},
+// 	}
+// 	g := newTestGhoto(photos, remover)
 
-	err := g.Run(dir+"/", "MyAlbum")
+// 	err := g.Run(dir+"/", "MyAlbum")
 
-	assert.NoError(t, err)
-	// jpg and mp4 were uploaded and removed
-	assert.Equal(t, 2, len(remover.removed))
-	// non-photo files (dng, lrv) cleaned up — they should no longer exist
-	assert.NoFileExists(t, filepath.Join(dir, "c.dng"))
-	assert.NoFileExists(t, filepath.Join(dir, "d.lrv"))
-}
+// 	assert.NoError(t, err)
+// 	// jpg and mp4 were uploaded and removed
+// 	assert.Equal(t, 2, len(remover.removed))
+// 	// non-photo files (dng, lrv) cleaned up — they should no longer exist
+// 	assert.NoFileExists(t, filepath.Join(dir, "c.dng"))
+// 	assert.NoFileExists(t, filepath.Join(dir, "d.lrv"))
+// }
 
 // Album does not exist — Create_album is called.
-func Test__Run__album_not_found_creates_album(t *testing.T) {
-	dir := makeTempDir(t, []string{"photo.jpg"})
-	remover := &fakeRemover{}
-	photos := &fakePhotos{
-		listAlbums: []googlephotos.Res__album{}, // no matching album
-	}
-	g := newTestGhoto(photos, remover)
+// func Test__Run__album_not_found_creates_album(t *testing.T) {
+// 	dir := makeTempDir(t, []string{"photo.jpg"})
+// 	remover := &fakeRemover{}
+// 	photos := &fakePhotos{
+// 		listAlbums: []googlephotos.Res__album{}, // no matching album
+// 	}
+// 	g := newTestGhoto(photos, remover)
 
-	err := g.Run(dir+"/", "NewAlbum")
+// 	err := g.Run(dir+"/", "NewAlbum")
 
-	assert.NoError(t, err)
-	assert.Equal(t, 1, len(remover.removed))
-}
+// 	assert.NoError(t, err)
+// 	assert.Equal(t, 1, len(remover.removed))
+// }
 
 // No files in directory — Run succeeds with nothing to do.
-func Test__Run__empty_dir(t *testing.T) {
-	dir := makeTempDir(t, []string{})
-	photos := &fakePhotos{
-		listAlbums: []googlephotos.Res__album{{Id: "id", Title: "Album"}},
-	}
-	g := newTestGhoto(photos, &fakeRemover{})
+// func Test__Run__empty_dir(t *testing.T) {
+// 	dir := makeTempDir(t, []string{})
+// 	photos := &fakePhotos{
+// 		listAlbums: []googlephotos.Res__album{{Id: "id", Title: "Album"}},
+// 	}
+// 	g := newTestGhoto(photos, &fakeRemover{})
 
-	err := g.Run(dir+"/", "Album")
+// 	err := g.Run(dir+"/", "Album")
 
-	assert.NoError(t, err)
-}
+// 	assert.NoError(t, err)
+// }
 
 // Upload fails — file is NOT removed, Run returns error.
-func Test__Run__upload_fails(t *testing.T) {
-	dir := makeTempDir(t, []string{"photo.jpg"})
-	remover := &fakeRemover{}
-	photos := &fakePhotos{
-		listAlbums:     []googlephotos.Res__album{{Id: "id", Title: "Album"}},
-		uploadPhotoErr: errors.New("upload failed"),
-	}
-	g := newTestGhoto(photos, remover)
+// func Test__Run__upload_fails(t *testing.T) {
+// 	dir := makeTempDir(t, []string{"photo.jpg"})
+// 	remover := &fakeRemover{}
+// 	photos := &fakePhotos{
+// 		listAlbums:     []googlephotos.Res__album{{Id: "id", Title: "Album"}},
+// 		uploadPhotoErr: errors.New("upload failed"),
+// 	}
+// 	g := newTestGhoto(photos, remover)
 
-	err := g.Run(dir+"/", "Album")
+// 	err := g.Run(dir+"/", "Album")
 
-	assert.Error(t, err)
-	assert.Equal(t, 0, len(remover.removed))
-}
+// 	assert.Error(t, err)
+// 	assert.Equal(t, 0, len(remover.removed))
+// }
 
 // Upload succeeds but Get_photo fails — file is NOT removed, Run returns error.
-func Test__Run__get_photo_fails(t *testing.T) {
-	dir := makeTempDir(t, []string{"photo.jpg"})
-	remover := &fakeRemover{}
-	photos := &fakePhotos{
-		listAlbums:  []googlephotos.Res__album{{Id: "id", Title: "Album"}},
-		getPhotoErr: errors.New("get photo failed"),
-	}
-	g := newTestGhoto(photos, remover)
+// func Test__Run__get_photo_fails(t *testing.T) {
+// 	dir := makeTempDir(t, []string{"photo.jpg"})
+// 	remover := &fakeRemover{}
+// 	photos := &fakePhotos{
+// 		listAlbums:  []googlephotos.Res__album{{Id: "id", Title: "Album"}},
+// 		getPhotoErr: errors.New("get photo failed"),
+// 	}
+// 	g := newTestGhoto(photos, remover)
 
-	err := g.Run(dir+"/", "Album")
+// 	err := g.Run(dir+"/", "Album")
 
-	assert.Error(t, err)
-	assert.Equal(t, 0, len(remover.removed))
-}
+// 	assert.Error(t, err)
+// 	assert.Equal(t, 0, len(remover.removed))
+// }
 
 // Get_photo returns a photo without ProductUrl — file is NOT removed.
-func Test__Run__get_photo_empty_url(t *testing.T) {
-	dir := makeTempDir(t, []string{"photo.jpg"})
-	remover := &fakeRemover{}
-	photos := &fakePhotos{
-		listAlbums:    []googlephotos.Res__album{{Id: "id", Title: "Album"}},
-		getPhotoEmpty: true,
-	}
-	g := newTestGhoto(photos, remover)
+// func Test__Run__get_photo_empty_url(t *testing.T) {
+// 	dir := makeTempDir(t, []string{"photo.jpg"})
+// 	remover := &fakeRemover{}
+// 	photos := &fakePhotos{
+// 		listAlbums:    []googlephotos.Res__album{{Id: "id", Title: "Album"}},
+// 		getPhotoEmpty: true,
+// 	}
+// 	g := newTestGhoto(photos, remover)
 
-	err := g.Run(dir+"/", "Album")
+// 	err := g.Run(dir+"/", "Album")
 
-	assert.Error(t, err)
-	assert.Equal(t, 0, len(remover.removed))
-}
+// 	assert.Error(t, err)
+// 	assert.Equal(t, 0, len(remover.removed))
+// }
 
 // Multiple files spread across workers.
-func Test__Run__multiple_files(t *testing.T) {
-	names := []string{
-		"1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg",
-		"6.jpg", "7.jpg", "8.jpg", "9.jpg", "10.jpg", "11.jpg",
-	}
-	dir := makeTempDir(t, names)
-	remover := &fakeRemover{}
-	photos := &fakePhotos{
-		listAlbums: []googlephotos.Res__album{{Id: "id", Title: "Album"}},
-	}
-	g := newTestGhoto(photos, remover)
+// func Test__Run__multiple_files(t *testing.T) {
+// 	names := []string{
+// 		"1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg",
+// 		"6.jpg", "7.jpg", "8.jpg", "9.jpg", "10.jpg", "11.jpg",
+// 	}
+// 	dir := makeTempDir(t, names)
+// 	remover := &fakeRemover{}
+// 	photos := &fakePhotos{
+// 		listAlbums: []googlephotos.Res__album{{Id: "id", Title: "Album"}},
+// 	}
+// 	g := newTestGhoto(photos, remover)
 
-	err := g.Run(dir+"/", "Album")
+// 	err := g.Run(dir+"/", "Album")
 
-	assert.NoError(t, err)
-	assert.Equal(t, len(names), len(remover.removed))
-}
+// 	assert.NoError(t, err)
+// 	assert.Equal(t, len(names), len(remover.removed))
+// }

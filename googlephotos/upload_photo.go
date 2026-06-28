@@ -10,20 +10,15 @@ import (
 	"time"
 )
 
-func (g *Google_photos__impl) Upload_photo(file_path string, google_album Google_album) (*Google_photo, error) {
-	upload_token, err := g.upload_photo(file_path)
-	if err != nil {
-		return nil, err
-	}
-
+func (g *Google_photos__impl) Create_photo(upload_token string, google_album Google_album) (*Google_photo, error) {
 	try_count := 0
-	res__mediaItem, err := g.create_photo(*upload_token, google_album)
+	res__mediaItem, err := g.create_photo(upload_token, google_album)
 	for err != nil && try_count < 3 {
 		try_count += 1
 
 		time.Sleep(time.Duration(try_count) * 10 * time.Second)
 
-		res__mediaItem, err = g.create_photo(*upload_token, google_album)
+		res__mediaItem, err = g.create_photo(upload_token, google_album)
 	}
 	if err != nil {
 		return nil, errors.New("Upload_photo__create_photo__err: " + err.Error())
@@ -36,7 +31,7 @@ func (g *Google_photos__impl) Upload_photo(file_path string, google_album Google
 	}, nil
 }
 
-func (g *Google_photos__impl) upload_photo(file_path string) (*string, error) {
+func (g *Google_photos__impl) Upload_photo(file_path string) (*string, error) {
 	var err error
 
 	url := "https://photoslibrary.googleapis.com/v1/uploads"

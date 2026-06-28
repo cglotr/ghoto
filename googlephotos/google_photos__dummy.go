@@ -31,9 +31,14 @@ func (g *Google_photos__dummy) List_album() (*Res__list_album, error) {
 	}, nil
 }
 
-func (g *Google_photos__dummy) Upload_photo(file_path string, google_album Google_album) (*Google_photo, error) {
+func (g *Google_photos__dummy) Upload_photo(file_path string) (*string, error) {
+	upload_token := "upload_token"
+	return &upload_token, nil
+}
+
+func (g *Google_photos__dummy) Create_photo(upload_token string, google_album Google_album) (*Google_photo, error) {
 	return &Google_photo{
-		Id:       "id__" + file_path,
-		Filename: "file_name__" + file_path,
+		Id:       "id__" + upload_token,
+		Filename: "file_name__" + upload_token,
 	}, nil
 }
