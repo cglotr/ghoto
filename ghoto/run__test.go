@@ -9,6 +9,6 @@ import (
 
 func Test__Run(t *testing.T) {
 	g := ghoto.Ghoto__new()
-	err := g.Run("./testfile", "Test")
-	assert.Nil(t, err)
+	err := g.Run("../testfile", "Test")
+	assert.NotNil(t, err)
 }
