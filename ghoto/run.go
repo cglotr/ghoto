@@ -184,8 +184,8 @@ func (g *Ghoto) work__upload_photo(
 ) {
 	defer wg.Done()
 
-	upload_token, err := g.google_photos.Upload_photo(file_for_worker.File_path)
 	fmt.Printf("⏳ Photo upload in progress...: file=%v\n", file_for_worker.File_path)
+	upload_token, err := g.google_photos.Upload_photo(file_for_worker.File_path)
 	if err != nil {
 		fmt.Printf("❌ Photo upload failed: file=%v\n",
 			file_for_worker,
